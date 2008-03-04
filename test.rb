@@ -1,6 +1,6 @@
 require 'test/unit'
+require File.dirname(__FILE__) + '/geoip_city'
 require 'rubygems'
-require 'geoip_city'
 require 'ruby-debug'
 Debugger.start
 
