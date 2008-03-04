@@ -22,6 +22,21 @@ mapping information. It is kindly provided free of charge by MaxMind.com.
    #     :area_code=>607, 
    #     :region=>"NY" }
 
+There are two optional arguments to database initializer.
+The first argument is the filename of the GeoIPCity.dat file 
+The second argument (optional) is to specify how GeoIP should
+keep the database in memory. There are three possibilities
+* :filesystem -- read database from filesystem, uses least memory.
+* :index -- the most frequently accessed index portion of the database, resulting in faster lookups than :filesystem, but less memory usage than :memory.
+* :memory -- load database into memory, faster performance but uses more memory.
+  (default)
+
+The third argument is boolean and decides whether the system should reload the database if changes are made to the dat file. (You probably don't need this. Default: false.)
+
+For example 
+
+  GeoIPCity::Database.new(dbfile, :filesystem, true)
+
 = Install
 Some variation of the following should work.
 
@@ -43,7 +58,6 @@ Some variation of the following should work.
    http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
    I put this file in 
    /opt/GeoIP/share/GeoIP/GeoLiteCity.dat
-
 
 4. Use it!
 
