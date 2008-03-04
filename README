@@ -11,7 +11,16 @@ mapping information. It is kindly provided free of charge by MaxMind.com.
    require 'geoip_city'
    db = GeoIPCity::Database.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
    result = db.look_up('24.24.24.24')
-   puts result.inspect
+   p result 
+   # => {:city=>"Ithaca", 
+   #     :latitude=>42.4277992248535, 
+   #     :longitude=>-76.4981994628906, 
+   #     :country_code3=>"USA", 
+   #     :country_code=>"US",
+   #     :country_name=>"United States", 
+   #     :dma_code=>555,
+   #     :area_code=>607, 
+   #     :region=>"NY" }
 
 = Install
 Some variation of the following should work.
@@ -25,16 +34,8 @@ Some variation of the following should work.
      ./configure --prefix=/opt/GeoIP
      make && sudo make install
 
-2. Now install the geoip Ruby gem (this package!)
-
-   Hint: You need to make sure that gcc can find the GeoIP header and library
-   files. One way to do this is to ensure that your CPATH and LIBRARY_PATH
-   enviromental variables include the GeoIP directory. So, if you want, do
-   this:
-     export CPATH="/opt/GeoIP/include:$CPATH"
-     export LIBRARY_PATH="/opt/GeoIP/lib:$LIBRARY_PATH"
-     sudo gem install geoip_city
-   
+2. Now install the geoip_city gem 
+     sudo gem install geoip_city -- --with-geoip-dir=/opt/GeoIP
 
 3. Download the GeoLite City database file in binary format from:
    http://www.maxmind.com/app/geolitecity

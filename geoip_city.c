@@ -9,15 +9,55 @@
 #include <GeoIPCity.h>
 
 static VALUE cDB;
+static VALUE rb_geoip_memory; 
+static VALUE rb_geoip_filesystem; 
+static VALUE rb_geoip_index; 
  
-/* The argument is the filename of the GeoIPCity.dat file */
-VALUE rb_geoip_new(VALUE self, VALUE filename) {
+/* The first argument is the filename of the GeoIPCity.dat file 
+ * load_option = :standard, :index, or :memory. default :memory
+ * check_cache = true or false. default false
+ * 
+ * filesystem: read database from filesystem, uses least memory.
+ *
+ * index: the most frequently accessed index portion of the database,
+ *   resulting in faster lookups than :filesystem, but less memory usage than
+ *   :memory.
+ *
+ * memory: load database into memory, faster performance but uses more
+ *   memory.
+ */
+static VALUE rb_geoip_new(int argc, VALUE *argv, VALUE self)
+{
   GeoIP *gi;
   VALUE database = Qnil;
+  VALUE filename, load_option = Qnil, check_cache = Qnil;
+  int flag;
 
-  if(gi = GeoIP_open(STR2CSTR(filename), GEOIP_MEMORY_CACHE)) {
+  rb_scan_args(argc, argv, "12", &filename, &load_option, &check_cache);
+  if(NIL_P(load_option))
+    load_option = rb_geoip_memory;
+  if(NIL_P(check_cache))
+    check_cache = Qfalse;
+  Check_Type(load_option, T_SYMBOL);
+
+  if(load_option == rb_geoip_memory) {
+    flag = GEOIP_MEMORY_CACHE;
+  } else if(load_option == rb_geoip_filesystem) {
+    flag = GEOIP_STANDARD;
+  } else if(load_option == rb_geoip_index) {
+    flag = GEOIP_INDEX_CACHE;
+  } else {
+    rb_raise(rb_eTypeError, "the second option must be :memory, :filesystem, or :index");
+    return Qnil;
+  }
+
+  if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
+  
+  if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
     database = Data_Wrap_Struct(cDB, 0, GeoIP_delete, gi);
     rb_obj_call_init(database, 0, 0);
+  } else { 
+    rb_sys_fail("Problem opening database");
   }
   return database; 
 }
@@ -82,7 +122,11 @@ void Init_geoip_city ()
 {
   VALUE mGeoIP = rb_define_module("GeoIPCity");
 
+  rb_geoip_memory = ID2SYM(rb_intern("memory")); 
+  rb_geoip_filesystem = ID2SYM(rb_intern("filesystem")); 
+  rb_geoip_index = ID2SYM(rb_intern("index")); 
+
   cDB = rb_define_class_under(mGeoIP, "Database", rb_cObject);
-  rb_define_singleton_method(cDB, "new", rb_geoip_new, 1);
+  rb_define_singleton_method(cDB, "new", rb_geoip_new, -1);
   rb_define_method(cDB, "look_up", rb_geoip_look_up, 1);
 }
