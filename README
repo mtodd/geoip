@@ -63,11 +63,15 @@ Some variation of the following should work.
 
 = Hint
 
-You might need to set
+1. Might need to set
 
-  export ARCHFLAGS="-arch i386"
+     export ARCHFLAGS="-arch i386"
 
-to be able to compile the gem.
+   to be able to compile the gem.
+
+2. You might find the following shell script helpful to install GeoLiteCity (the c library) 
+
+    http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh
 
 = License 
 Copyright (C) 2007 Ryan Dahl (ry@tinyclouds.org)
