@@ -61,6 +61,14 @@ Some variation of the following should work.
 
 4. Use it!
 
+= Hint
+
+You might need to set
+
+  export ARCHFLAGS="-arch i386"
+
+to be able to compile the gem.
+
 = License 
 Copyright (C) 2007 Ryan Dahl (ry@tinyclouds.org)
 
