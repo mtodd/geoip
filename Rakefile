@@ -6,11 +6,11 @@ require 'rake/gempackagetask'
 
 task :default => [:compile, :test]
 
-CLEAN.add "geoip_city.{o,bundle,so,obj,pdb,lib,def,exp}"
+CLEAN.add "geoip.{o,bundle,so,obj,pdb,lib,def,exp}"
 CLOBBER.add ['Makefile', 'mkmf.log','doc']
 
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.add ['README', 'geoip_city.c']
+  rdoc.rdoc_files.add ['README', 'geoip.c']
   rdoc.main = "README" # page to start on
   rdoc.rdoc_dir = 'doc/' # rdoc output folder
 end
@@ -21,12 +21,13 @@ Rake::TestTask.new do |t|
 end
 
 spec = Gem::Specification.new do |s|
-  s.name              = 'geoip_city'
-  s.author            = 'ry dahl'
-  s.email             = 'ry@tinyclouds.org'
-  s.version           = "0.2.0"
+  s.name              = 'geoip'
+  s.description       = 'Generic GeoIP lookup tool. Based on the geoip_city RubyGem by Ryan Dahl'
+  s.author            = 'Matt Todd'
+  s.email             = 'mtodd@highgroove.com'
+  s.version           = "0.5.0"
   s.summary           = "A Binding to the GeoIP C library"
-  s.homepage          = "http://geoip_city.rubyforge.org"
+  s.homepage          = "http://github.com/mtodd/geoip"
   s.files             = FileList['Rakefile', '*.rb', '*.c', 'README*']
   s.test_files        = 'test.rb'
   s.extensions        = 'extconf.rb'
@@ -40,7 +41,11 @@ end
 
 desc 'compile the extension'
 task(:compile => 'Makefile') { sh 'make' }
-file('Makefile' => "geoip_city.c") { ruby 'extconf.rb' }
+file('Makefile' => "geoip.c") { ruby 'extconf.rb' }
+
+task :install => [:gem] do
+  `sudo env ARCHFLAGS="-arch i386" gem install pkg/geoip-0.5.0.gem -- --with-geoip-dir=/opt/GeoIP`
+end
 
 task(:webpage) do
   sh 'scp -r doc/* rydahl@rubyforge.org:/var/www/gforge-projects/geoip-city/'

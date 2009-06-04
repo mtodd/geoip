@@ -1,4 +1,4 @@
-Ruby GeoIPCity Bindings
+Ruby GeoIP Bindings
 =======================
 
 What?
@@ -14,8 +14,8 @@ mapping information. It is kindly provided free of charge by MaxMind.com.
 
 Usage
 
-    require 'geoip_city'
-    db = GeoIPCity::Database.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
+    require 'geoip'
+    db = GeoIP::City::Database.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
     result = db.look_up('24.24.24.24')
     p result 
     # => {:city=>"Ithaca", 
@@ -90,19 +90,16 @@ Hints
 
      to be able to compile the gem.
 
+     Example:
+
+        sudo env ARCHFLAGS="-arch i386" gem install geoip_city -- --with-geoip-dir=/opt/GeoIP
+
   2. You might find [this shell
   script](http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh)
      helpful to install the C library.
 
-Links
------
-
-[rdocs](http://geoip-city.rubyforge.org/)
-
-[git repo](https://github.com/ry/geoip-city/tree)
-
 License 
 -------
-Copyright (C) 2007--2009 Ryan Dahl (ry@tinyclouds.org)
+Copyright (C) 2007--2009 Ryan Dahl (ry@tinyclouds.org), Matt Todd (mtodd@highgroove.com)
 
 I give permission for you to do whatever you'd like to do with this software.
