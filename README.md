@@ -15,7 +15,7 @@ mapping information. It is kindly provided free of charge by MaxMind.com.
 Usage
 
     require 'geoip'
-    db = GeoIP::City::Database.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
+    db = GeoIP::City.new('/opt/GeoIP/share/GeoIP/GeoLiteCity.dat')
     result = db.look_up('24.24.24.24')
     p result 
     # => {:city=>"Ithaca", 
@@ -49,8 +49,17 @@ There are arguments to database initializer.
 
 For example 
 
-    GeoIPCity::Database.new(dbfile, :filesystem, true)
+    GeoIP::City.new(dbfile, :filesystem, true)
 
+Usage for Organization Search
+-----------------------------
+
+    require 'geoip'
+    db = GeoIP::Organization.new('/opt/GeoIP/share/GeoIP/GeoIPOrg.dat')
+    db.look_up('24.24.24.24')
+    # => {:name=>"Road Runner"}
+
+The name is the only data available for Organizations.
 
 Install
 -------
@@ -69,17 +78,33 @@ Some variation of the following should work.
 
        make && sudo make install
 
-  2. Now install the `geoip_city` gem 
+  NOTE: for Intel Mac OS X platforms, try the following:
 
-       sudo gem install geoip_city -- --with-geoip-dir=/opt/GeoIP
+       sudo env ARCHFLAGS="-arch i386" ./configure --prefix=/opt/GeoIP
+
+       sudo env ARCHFLAGS="-arch i386" make
+
+       sudo env ARCHFLAGS="-arch i386" make install
+
+  2. Now install the `geoip` gem 
+
+       sudo gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
 
   3. Download the GeoLite City database file in binary format at http://www.maxmind.com/app/geolitecity
-     Maybe this [direct link](http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz) will work. 
+     Maybe this [direct link](http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz) will work.
      I put this file in 
 
        /opt/GeoIP/share/GeoIP/GeoLiteCity.dat
 
+     If you are a paying customer, you will download the files required below:
+
+     [MaxMind Customer Downloads](http://www.maxmind.com/app/download_files)
+
+     You will want to get the City Rev1 data file and Organization files at minimum.
+
   4. Use it!
+
+     See above for usage details.
 
 Hints
 -----
@@ -92,14 +117,25 @@ Hints
 
      Example:
 
-        sudo env ARCHFLAGS="-arch i386" gem install geoip_city -- --with-geoip-dir=/opt/GeoIP
+        sudo env ARCHFLAGS="-arch i386" gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
 
-  2. You might find [this shell
-  script](http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh)
+  2. You might find [this shell script](http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh)
      helpful to install the C library.
 
-License 
+Links
+-----
+
+This iteration of the library is based on the hard work of Ryan Dahl (ry@tinyclouds.org). You can find the original RDocs and Git Repo below:
+
+[rdocs](http://geoip-city.rubyforge.org/)
+[git repo](https://github.com/ry/geoip-city/tree)
+
+License
 -------
 Copyright (C) 2007--2009 Ryan Dahl (ry@tinyclouds.org), Matt Todd (mtodd@highgroove.com)
 
-I give permission for you to do whatever you'd like to do with this software.
+This program is free software. It comes without any warranty, to
+the extent permitted by applicable law. You can redistribute it
+and/or modify it under the terms of the Do What The Fuck You Want
+To Public License, Version 2, as published by Sam Hocevar. See
+http://sam.zoy.org/wtfpl/COPYING for more details.
