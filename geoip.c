@@ -1,4 +1,5 @@
 /* ry dahl <ry@tinyclouds.org> May 21, 2007 */
+/* Matt Todd <mtodd@highgroove.com> June 4, 2009 */
 /* This program is free software. It comes without any warranty, to
  * the extent permitted by applicable law. You can redistribute it
  * and/or modify it under the terms of the Do What The Fuck You Want
@@ -15,9 +16,22 @@ static VALUE rb_geoip_memory;
 static VALUE rb_geoip_filesystem;
 static VALUE rb_geoip_index;
 
-/* helper  */
+/* helpers */
 void rb_hash_sset(VALUE hash, const char *str, VALUE v) {
   rb_hash_aset(hash, ID2SYM(rb_intern(str)), v);
+}
+
+int check_load_option(VALUE load_option) {
+  if(load_option == rb_geoip_memory) {
+    return GEOIP_MEMORY_CACHE;
+  } else if(load_option == rb_geoip_filesystem) {
+    return GEOIP_STANDARD;
+  } else if(load_option == rb_geoip_index) {
+    return GEOIP_INDEX_CACHE;
+  } else {
+    rb_raise(rb_eTypeError, "the second option must be :memory, :filesystem, or :index");
+    return Qnil;
+  }
 }
 
 /* GeoIP::City ***************************************************************/
@@ -77,16 +91,7 @@ static VALUE rb_geoip_city_new(int argc, VALUE *argv, VALUE self)
     check_cache = Qfalse;
   Check_Type(load_option, T_SYMBOL);
 
-  if(load_option == rb_geoip_memory) {
-    flag = GEOIP_MEMORY_CACHE;
-  } else if(load_option == rb_geoip_filesystem) {
-    flag = GEOIP_STANDARD;
-  } else if(load_option == rb_geoip_index) {
-    flag = GEOIP_INDEX_CACHE;
-  } else {
-    rb_raise(rb_eTypeError, "the second option must be :memory, :filesystem, or :index");
-    return Qnil;
-  }
+  if(flag = check_load_option(load_option)) flag;
 
   if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
   
@@ -124,34 +129,13 @@ VALUE rb_geoip_city_look_up(VALUE self, VALUE addr) {
 
 /* GeoIP::Organization *******************************************************/
 
-// VALUE rb_org_record_to_hash(GeoIPRecord *record) 
-// {
-//   VALUE hash = rb_hash_new();
-// 
-//   if(record->country_code)
-//     rb_hash_sset(hash, "country_code", rb_str_new2(record->country_code));
-//   if(record->country_code3)
-//     rb_hash_sset(hash, "country_code3", rb_str_new2(record->country_code3));
-//   if(record->country_name)
-//     rb_hash_sset(hash, "country_name", rb_str_new2(record->country_name));
-//   if(record->region)
-//     rb_hash_sset(hash, "region", rb_str_new2(record->region));
-//   if(record->city)
-//     rb_hash_sset(hash, "city", rb_str_new2(record->city));
-//   if(record->postal_code)
-//     rb_hash_sset(hash, "postal_code", rb_str_new2(record->postal_code));
-//   if(record->latitude)
-//     rb_hash_sset(hash, "latitude", rb_float_new((double)record->latitude));
-//   if(record->longitude)
-//     rb_hash_sset(hash, "longitude", rb_float_new((double)record->longitude));
-//   if(record->dma_code)
-//     rb_hash_sset(hash, "dma_code", INT2NUM(record->dma_code));
-//   if(record->area_code)
-//     rb_hash_sset(hash, "area_code", INT2NUM(record->area_code));
-//   
-//   return hash;
-// }
-
+/* GeoIP::Organization.new('/path/to/GeoIPOrg.dat', load_option)
+ * load_option can be:
+ * * :memory - load the data into memory, fastest (default)
+ * * :filesystem - look up from filesystem, least memory intensive
+ * * :index - stores in memory most recent queries
+ * 
+ */
 static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
 {
   GeoIP *gi;
@@ -166,19 +150,10 @@ static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
     check_cache = Qfalse;
   Check_Type(load_option, T_SYMBOL);
 
-  if(load_option == rb_geoip_memory) {
-    flag = GEOIP_MEMORY_CACHE;
-  } else if(load_option == rb_geoip_filesystem) {
-    flag = GEOIP_STANDARD;
-  } else if(load_option == rb_geoip_index) {
-    flag = GEOIP_INDEX_CACHE;
-  } else {
-    rb_raise(rb_eTypeError, "the second option must be :memory, :filesystem, or :index");
-    return Qnil;
-  }
+  if(flag = check_load_option(load_option)) flag;
 
   if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
-  
+
   if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
     database = Data_Wrap_Struct(mGeoIP_Organization, 0, GeoIP_delete, gi);
     rb_obj_call_init(database, 0, 0);
@@ -189,13 +164,12 @@ static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
 }
 
 /* Pass this function an IP address as a string, it will return a hash
- * containing all the information that the database knows about the IP
+ * containing all the information that the database knows about the IP:
  *    db.look_up('24.24.24.24') 
- *    => {} 
+ *    => {:name => "Road Runner"}
  */ 
 VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
-  GeoIPRecord *record = NULL;
   VALUE hash = rb_hash_new();
   char * name = NULL;
   
@@ -208,12 +182,6 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
 }
 
 /* GeoIP *********************************************************************/
-
-/* module GeoIP
- *   class City; end
- *   class Organization; end
- * end
- */
 
 void Init_geoip()
 {
