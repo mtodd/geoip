@@ -1,2 +1,7 @@
 pkg/
 mkmf.log
+Makefile
+conftest.dSYM/
+geoip.bundle
+geoip.so
+geoip.o
