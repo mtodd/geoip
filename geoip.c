@@ -175,7 +175,7 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(name = GeoIP_org_by_addr(gi, STR2CSTR(addr))) {
+  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
     rb_hash_sset(hash, "name", rb_str_new2(name));
   }
   return hash;
