@@ -125,14 +125,14 @@ Hints
 Links
 -----
 
-This iteration of the library is based on the hard work of Ryan Dahl (ry@tinyclouds.org). You can find the original RDocs and Git Repo below:
+This iteration of the library is based on the hard work of Ryah Dahl (ry@tinyclouds.org). You can find the original RDocs and Git Repo below:
 
 [rdocs](http://geoip-city.rubyforge.org/)
 [git repo](https://github.com/ry/geoip-city/tree)
 
 License
 -------
-Copyright (C) 2007--2009 Ryan Dahl (ry@tinyclouds.org), Matt Todd (mtodd@highgroove.com)
+Copyright (C) 2007--2009 Ryah Dahl (ry@tinyclouds.org), Matt Todd (mtodd@highgroove.com)
 
 This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
