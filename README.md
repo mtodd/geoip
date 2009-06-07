@@ -80,15 +80,15 @@ Some variation of the following should work.
 
   NOTE: for Intel Mac OS X platforms, try the following:
 
-       sudo env ARCHFLAGS="-arch i386" ./configure --prefix=/opt/GeoIP
+       env ARCHFLAGS="-arch i386" ./configure --prefix=/opt/GeoIP
 
-       sudo env ARCHFLAGS="-arch i386" make
+       env ARCHFLAGS="-arch i386" make
 
        sudo env ARCHFLAGS="-arch i386" make install
 
   2. Now install the `geoip` gem 
 
-       sudo gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
+       gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
 
   3. Download the GeoLite City database file in binary format at http://www.maxmind.com/app/geolitecity
      Maybe this [direct link](http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz) will work.
@@ -117,7 +117,7 @@ Hints
 
      Example:
 
-        sudo env ARCHFLAGS="-arch i386" gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
+        env ARCHFLAGS="-arch i386" gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
 
   2. You might find [this shell script](http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh)
      helpful to install the C library.

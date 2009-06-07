@@ -47,7 +47,7 @@ task(:compile => 'Makefile') { sh 'make' }
 file('Makefile' => "geoip.c") { ruby 'extconf.rb' }
 
 task :install => [:gem] do
-  `sudo env ARCHFLAGS="-arch i386" gem install pkg/geoip-0.5.0.gem -- --with-geoip-dir=/opt/GeoIP`
+  `env ARCHFLAGS="-arch i386" gem install pkg/geoip-0.5.0.gem -- --with-geoip-dir=/opt/GeoIP`
 end
 
 task(:webpage) do
