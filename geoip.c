@@ -34,6 +34,34 @@ int check_load_option(VALUE load_option) {
   }
 }
 
+/* Generic initializer */
+static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE *argv, VALUE self)
+{
+  GeoIP *gi;
+  VALUE database = Qnil;
+  VALUE filename, load_option = Qnil, check_cache = Qnil;
+  int flag;
+
+  rb_scan_args(argc, argv, "12", &filename, &load_option, &check_cache);
+  if(NIL_P(load_option))
+    load_option = rb_geoip_memory;
+  if(NIL_P(check_cache))
+    check_cache = Qfalse;
+  Check_Type(load_option, T_SYMBOL);
+
+  if(flag = check_load_option(load_option)) flag;
+
+  if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
+
+  if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
+    database = Data_Wrap_Struct(mGeoIP_Database_Class, 0, GeoIP_delete, gi);
+    rb_obj_call_init(database, 0, 0);
+  } else { 
+    rb_sys_fail("Problem opening database");
+  }
+  return database;
+}
+
 /* GeoIP::City ***************************************************************/
 
 VALUE rb_city_record_to_hash(GeoIPRecord *record) 
@@ -79,29 +107,7 @@ VALUE rb_city_record_to_hash(GeoIPRecord *record)
  */
 static VALUE rb_geoip_city_new(int argc, VALUE *argv, VALUE self)
 {
-  GeoIP *gi;
-  VALUE database = Qnil;
-  VALUE filename, load_option = Qnil, check_cache = Qnil;
-  int flag;
-
-  rb_scan_args(argc, argv, "12", &filename, &load_option, &check_cache);
-  if(NIL_P(load_option))
-    load_option = rb_geoip_memory;
-  if(NIL_P(check_cache))
-    check_cache = Qfalse;
-  Check_Type(load_option, T_SYMBOL);
-
-  if(flag = check_load_option(load_option)) flag;
-
-  if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
-  
-  if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
-    database = Data_Wrap_Struct(mGeoIP_City, 0, GeoIP_delete, gi);
-    rb_obj_call_init(database, 0, 0);
-  } else { 
-    rb_sys_fail("Problem opening database");
-  }
-  return database; 
+  return rb_geoip_database_new(mGeoIP_City, argc, argv, self);
 }
 
 /* Pass this function an IP address as a string, it will return a hash
@@ -138,29 +144,7 @@ VALUE rb_geoip_city_look_up(VALUE self, VALUE addr) {
  */
 static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
 {
-  GeoIP *gi;
-  VALUE database = Qnil;
-  VALUE filename, load_option = Qnil, check_cache = Qnil;
-  int flag;
-
-  rb_scan_args(argc, argv, "12", &filename, &load_option, &check_cache);
-  if(NIL_P(load_option))
-    load_option = rb_geoip_memory;
-  if(NIL_P(check_cache))
-    check_cache = Qfalse;
-  Check_Type(load_option, T_SYMBOL);
-
-  if(flag = check_load_option(load_option)) flag;
-
-  if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
-
-  if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
-    database = Data_Wrap_Struct(mGeoIP_Organization, 0, GeoIP_delete, gi);
-    rb_obj_call_init(database, 0, 0);
-  } else { 
-    rb_sys_fail("Problem opening database");
-  }
-  return database; 
+  return rb_geoip_database_new(mGeoIP_Organization, argc, argv, self);
 }
 
 /* Pass this function an IP address as a string, it will return a hash
