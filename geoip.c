@@ -161,6 +161,7 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   Data_Get_Struct(self, GeoIP, gi);
   if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
     rb_hash_sset(hash, "name", rb_str_new2(name));
+    free(name);
   }
   return hash;
 }
