@@ -14,6 +14,26 @@ class Test::Unit::TestCase
 
 end
 
+class GeoIPTest < Test::Unit::TestCase
+  
+  def test_addr_to_num_converts_an_ip_to_an_ipnum
+    ip = "24.24.24.24"
+    ipnum = 16777216*24 + 65536*24 + 256*24 + 24
+    assert_equal ipnum, GeoIP.addr_to_num(ip)
+  end
+  
+  def test_addr_to_num_expects_an_ip_string
+    assert_raises TypeError do 
+      GeoIP.addr_to_num(nil) 
+    end
+  end
+  
+  def test_addr_to_num_returns_zero_for_an_illformed_ip_string
+    assert_equal 0, GeoIP.addr_to_num("foo.bar")
+  end
+  
+end
+
 class GeoIPCityTest < Test::Unit::TestCase
   
   def setup

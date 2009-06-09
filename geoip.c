@@ -168,6 +168,19 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
 
 /* GeoIP *********************************************************************/
 
+/* Returns the numeric form of an IP address.
+ * 
+ * For example:
+ * 24.24.24.24 => 404232216
+ * 
+ * This is used in order to be able to perform searches in CSV versions of the
+ * data files or in SQL records if the data has been put there.
+ */
+VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
+  Check_Type(addr, T_STRING);
+  return INT2NUM(_GeoIP_addr_to_num(STR2CSTR(addr)));
+}
+
 void Init_geoip()
 {
   mGeoIP = rb_define_module("GeoIP");
@@ -183,4 +196,6 @@ void Init_geoip()
   mGeoIP_Organization = rb_define_class_under(mGeoIP, "Organization", rb_cObject);
   rb_define_singleton_method( mGeoIP_Organization, "new",     rb_geoip_org_new,     -1);
   rb_define_method(           mGeoIP_Organization, "look_up", rb_geoip_org_look_up, 1);
+  
+  rb_define_singleton_method(mGeoIP, "addr_to_num", rb_geoip_addr_to_num, 1);
 }
