@@ -22,6 +22,12 @@ class GeoIPTest < Test::Unit::TestCase
     assert_equal ipnum, GeoIP.addr_to_num(ip)
   end
   
+  def test_addr_to_num_converts_large_ips_to_an_ipnum_correctly
+    ip = "245.245.245.245"
+    ipnum = 16777216*245 + 65536*245 + 256*245 + 245
+    assert_equal ipnum, GeoIP.addr_to_num(ip)
+  end
+  
   def test_addr_to_num_expects_an_ip_string
     assert_raises TypeError do 
       GeoIP.addr_to_num(nil) 

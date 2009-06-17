@@ -178,7 +178,7 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
  */
 VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
   Check_Type(addr, T_STRING);
-  return INT2NUM(_GeoIP_addr_to_num(STR2CSTR(addr)));
+  return UINT2NUM((unsigned long)_GeoIP_addr_to_num(STR2CSTR(addr)));
 }
 
 void Init_geoip()
