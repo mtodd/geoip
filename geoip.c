@@ -181,6 +181,16 @@ VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
   return UINT2NUM((unsigned long)_GeoIP_addr_to_num(STR2CSTR(addr)));
 }
 
+VALUE rb_geoip_num_to_addr(VALUE self, VALUE num) {
+  VALUE num_type = TYPE(num);
+  switch(num_type) {
+    case T_FIXNUM: break;
+    case T_BIGNUM: break;
+    default: rb_raise(rb_eTypeError, "wrong argument type %s (expected Fixnum or Bignum)", rb_obj_classname(num));
+  }
+  return rb_str_new2((char*)_GeoIP_num_to_addr(NULL, (unsigned long)NUM2UINT(num)));
+}
+
 void Init_geoip()
 {
   mGeoIP = rb_define_module("GeoIP");
@@ -198,4 +208,5 @@ void Init_geoip()
   rb_define_method(           mGeoIP_Organization, "look_up", rb_geoip_org_look_up, 1);
   
   rb_define_singleton_method(mGeoIP, "addr_to_num", rb_geoip_addr_to_num, 1);
+  rb_define_singleton_method(mGeoIP, "num_to_addr", rb_geoip_num_to_addr, 1);
 }
