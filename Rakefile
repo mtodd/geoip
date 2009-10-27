@@ -21,7 +21,7 @@ Rake::TestTask.new do |t|
 end
 
 spec = Gem::Specification.new do |s|
-  s.name              = 'geoip'
+  s.name              = 'geoip-c'
   s.version           = "0.5.5"
 
   s.authors           = ['Ryah Dahl', 'Matt Todd', 'Charles Brian Quinn']
@@ -47,7 +47,7 @@ task(:compile => 'Makefile') { sh 'make' }
 file('Makefile' => "geoip.c") { ruby 'extconf.rb' }
 
 task :install => [:gem] do
-  `env ARCHFLAGS="-arch i386" gem install pkg/geoip-0.5.0.gem -- --with-geoip-dir=/opt/GeoIP`
+  `env ARCHFLAGS="-arch i386" gem install pkg/geoip-c-0.5.0.gem -- --with-geoip-dir=/usr/local/GeoIP`
 end
 
 task(:webpage) do
