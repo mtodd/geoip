@@ -75,21 +75,27 @@ Some variation of the following should work.
         ./configure --prefix=/opt/GeoIP
         make && sudo make install
 
-    NOTE: for Intel Mac OS X platforms, try the following:
+    On Mac OS X, you can install using MacPorts:
 
-        env ARCHFLAGS="-arch i386" ./configure --prefix=/opt/GeoIP
-        env ARCHFLAGS="-arch i386" make
-        sudo env ARCHFLAGS="-arch i386" make install
+        sudo port install libgeoip
 
   2. Now install the `geoip` gem 
 
         gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
+
+    Alternatively, if you installed libgeoip using MacPorts:
+
+        env ARCHFLAGS="-arch x86_64" gem install geoip-c -- --with-opt-dir=/opt/local
 
   3. Download the GeoLite City database file in binary format at http://www.maxmind.com/app/geolitecity
      Maybe this [direct link](http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz) will work.
      I put this file in 
 
         /opt/GeoIP/share/GeoIP/GeoLiteCity.dat
+
+    If you installed libgeoip using MacPorts then put it in:
+
+        /opt/local/share/GeoIP/GeoLiteCity.dat
 
      If you are a paying customer, you will download the files required below:
 
