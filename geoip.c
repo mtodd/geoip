@@ -163,8 +163,10 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
     rb_hash_sset(hash, "name", rb_str_new2(name));
     free(name);
+    return hash;
+  } else {
+    return Qnil;
   }
-  return hash;
 }
 
 /* GeoIP::Domain *******************************************************/
@@ -196,8 +198,10 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
   if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
     rb_hash_sset(hash, "domain", rb_str_new2(name));
     free(name);
+    return hash;
+  } else {
+    return Qnil;
   }
-  return hash;
 }
 
 /* GeoIP *********************************************************************/
