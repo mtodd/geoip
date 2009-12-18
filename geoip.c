@@ -12,6 +12,7 @@
 static VALUE mGeoIP;
 static VALUE mGeoIP_City;
 static VALUE mGeoIP_Organization;
+static VALUE mGeoIP_Domain;
 static VALUE rb_geoip_memory;
 static VALUE rb_geoip_filesystem;
 static VALUE rb_geoip_index;
@@ -166,6 +167,39 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   return hash;
 }
 
+/* GeoIP::Domain *******************************************************/
+
+/* GeoIP::Domain.new('/path/to/GeoIPDomain.dat', load_option)
+ * load_option can be:
+ * * :memory - load the data into memory, fastest (default)
+ * * :filesystem - look up from filesystem, least memory intensive
+ * * :index - stores in memory most recent queries
+ *
+ */
+static VALUE rb_geoip_domain_new(int argc, VALUE *argv, VALUE self)
+{
+  return rb_geoip_database_new(mGeoIP_Domain, argc, argv, self);
+}
+
+/* Pass this function an IP address as a string, it will return a hash
+ * containing all the information that the database knows about the IP:
+ *    db.look_up('24.24.24.24')
+ *    => {:domain => "rr.com"}
+ */
+VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
+  GeoIP *gi;
+  VALUE hash = rb_hash_new();
+  char * name = NULL;
+
+  Check_Type(addr, T_STRING);
+  Data_Get_Struct(self, GeoIP, gi);
+  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
+    rb_hash_sset(hash, "domain", rb_str_new2(name));
+    free(name);
+  }
+  return hash;
+}
+
 /* GeoIP *********************************************************************/
 
 /* Returns the numeric form of an IP address.
@@ -265,6 +299,10 @@ void Init_geoip()
   rb_define_singleton_method( mGeoIP_Organization, "new",     rb_geoip_org_new,     -1);
   rb_define_method(           mGeoIP_Organization, "look_up", rb_geoip_org_look_up, 1);
   
+  mGeoIP_Domain = rb_define_class_under(mGeoIP, "Domain", rb_cObject);
+  rb_define_singleton_method( mGeoIP_Domain, "new",     rb_geoip_domain_new,     -1);
+  rb_define_method(           mGeoIP_Domain, "look_up", rb_geoip_domain_look_up, 1);
+
   rb_define_singleton_method(mGeoIP, "addr_to_num", rb_geoip_addr_to_num, 1);
   rb_define_singleton_method(mGeoIP, "num_to_addr", rb_geoip_num_to_addr, 1);
 }
