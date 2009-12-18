@@ -13,6 +13,7 @@ static VALUE mGeoIP;
 static VALUE mGeoIP_City;
 static VALUE mGeoIP_Organization;
 static VALUE mGeoIP_ISP;
+static VALUE mGeoIP_NetSpeed;
 static VALUE mGeoIP_Domain;
 static VALUE rb_geoip_memory;
 static VALUE rb_geoip_filesystem;
@@ -205,6 +206,41 @@ VALUE rb_geoip_isp_look_up(VALUE self, VALUE addr) {
   }
 }
 
+/* GeoIP::NetSpeed *******************************************************/
+
+/* GeoIP::NetSpeed.new('/path/to/GeoIPNetSpeed.dat', load_option)
+ * load_option can be:
+ * * :memory - load the data into memory, fastest (default)
+ * * :filesystem - look up from filesystem, least memory intensive
+ * * :index - stores in memory most recent queries
+ *
+ */
+static VALUE rb_geoip_netspeed_new(int argc, VALUE *argv, VALUE self)
+{
+  return rb_geoip_database_new(mGeoIP_NetSpeed, argc, argv, self);
+}
+
+/* Pass this function an IP address as a string, it will return a hash
+ * containing all the information that the database knows about the IP:
+ *    db.look_up('24.24.24.24')
+ *    => {:netspeed => "Cable/DSL"}
+ */
+VALUE rb_geoip_netspeed_look_up(VALUE self, VALUE addr) {
+  GeoIP *gi;
+  VALUE hash = rb_hash_new();
+  char * name = NULL;
+
+  Check_Type(addr, T_STRING);
+  Data_Get_Struct(self, GeoIP, gi);
+  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
+    rb_hash_sset(hash, "netspeed", rb_str_new2(name));
+    free(name);
+    return hash;
+  } else {
+    return Qnil;
+  }
+}
+
 /* GeoIP::Domain *******************************************************/
 
 /* GeoIP::Domain.new('/path/to/GeoIPDomain.dat', load_option)
@@ -342,6 +378,10 @@ void Init_geoip()
   mGeoIP_ISP = rb_define_class_under(mGeoIP, "ISP", rb_cObject);
   rb_define_singleton_method( mGeoIP_ISP, "new",     rb_geoip_isp_new,     -1);
   rb_define_method(           mGeoIP_ISP, "look_up", rb_geoip_isp_look_up, 1);
+
+  mGeoIP_NetSpeed = rb_define_class_under(mGeoIP, "NetSpeed", rb_cObject);
+  rb_define_singleton_method( mGeoIP_NetSpeed, "new",     rb_geoip_netspeed_new,     -1);
+  rb_define_method(           mGeoIP_NetSpeed, "look_up", rb_geoip_netspeed_look_up, 1);
 
   mGeoIP_Domain = rb_define_class_under(mGeoIP, "Domain", rb_cObject);
   rb_define_singleton_method( mGeoIP_Domain, "new",     rb_geoip_domain_new,     -1);
