@@ -131,6 +131,16 @@ This iteration of the library is based on the hard work of Ryah Dahl (ry@tinyclo
 [rdocs](http://geoip-city.rubyforge.org/)
 [git repo](https://github.com/ry/geoip-city/tree)
 
+Thanks
+------
+
+Special appreciation and thanks belongs to Ry Dahl for his initial work on this library.
+
+Many thanks to our contributors:
+
+* Charles Brian Quinn
+* Michael Sheakoski
+
 License
 -------
 Copyright (C) 2007--2009 Ryah Dahl (ry@tinyclouds.org), Matt Todd (mtodd@highgroove.com)
