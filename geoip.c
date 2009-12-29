@@ -65,6 +65,18 @@ static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE 
   return database;
 }
 
+/* Generic, single-value look up method */
+static VALUE generic_single_value_lookup_response(char *key, char *value)
+{
+  VALUE result = rb_hash_new();
+  if(value) {
+    rb_hash_sset(result, key, rb_str_new2(value));
+    return result;
+  } else {
+    return Qnil;
+  }
+}
+
 /* GeoIP::City ***************************************************************/
 
 VALUE rb_city_record_to_hash(GeoIPRecord *record)
@@ -157,18 +169,9 @@ static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
  */ 
 VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
-  VALUE hash = rb_hash_new();
-  char * name = NULL;
-
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
-    rb_hash_sset(hash, "name", rb_str_new2(name));
-    free(name);
-    return hash;
-  } else {
-    return Qnil;
-  }
+  return generic_single_value_lookup_response("name", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
 }
 
 /* GeoIP::ISP *******************************************************/
@@ -192,18 +195,9 @@ static VALUE rb_geoip_isp_new(int argc, VALUE *argv, VALUE self)
  */
 VALUE rb_geoip_isp_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
-  VALUE hash = rb_hash_new();
-  char * name = NULL;
-
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
-    rb_hash_sset(hash, "isp", rb_str_new2(name));
-    free(name);
-    return hash;
-  } else {
-    return Qnil;
-  }
+  return generic_single_value_lookup_response("isp", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
 }
 
 /* GeoIP::NetSpeed *******************************************************/
@@ -227,18 +221,9 @@ static VALUE rb_geoip_netspeed_new(int argc, VALUE *argv, VALUE self)
  */
 VALUE rb_geoip_netspeed_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
-  VALUE hash = rb_hash_new();
-  char * name = NULL;
-
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
-    rb_hash_sset(hash, "netspeed", rb_str_new2(name));
-    free(name);
-    return hash;
-  } else {
-    return Qnil;
-  }
+  return generic_single_value_lookup_response("netspeed", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
 }
 
 /* GeoIP::Domain *******************************************************/
@@ -262,18 +247,9 @@ static VALUE rb_geoip_domain_new(int argc, VALUE *argv, VALUE self)
  */
 VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
-  VALUE hash = rb_hash_new();
-  char * name = NULL;
-
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
-    rb_hash_sset(hash, "domain", rb_str_new2(name));
-    free(name);
-    return hash;
-  } else {
-    return Qnil;
-  }
+  return generic_single_value_lookup_response("domain", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
 }
 
 /* GeoIP *********************************************************************/
