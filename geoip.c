@@ -267,62 +267,9 @@ VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
   return UINT2NUM((unsigned int)_GeoIP_addr_to_num(STR2CSTR(addr)));
 }
 
-/* This returns a pointer to a character array that represents the IP string of
- * the IP Number given it.
- * 
- * This was originally a slightly patched version of the function found in the
- * GeoIP library called _GeoIP_num_to_addr with the same declaration but
- * instead a slight variation has been used here.
- * 
- * The function definition this replaces follows:
- *   char *ret_str;
- *   char *cur_str;
- *   int octet[4];
- *   int num_chars_written, i;
- *   
- *   ret_str = malloc(sizeof(char) * 16);
- *   memset(ret_str, '\0', sizeof(char) * 16); // ensure we null-terminate the string
- *   cur_str = ret_str;
- *   
- *   for (i = 0; i<4; i++) {
- *     octet[3 - i] = ipnum % 256;
- *     ipnum >>= 8;
- *   }
- *   
- *   for (i = 0; i<4; i++) {
- *     num_chars_written = sprintf(cur_str, "%d", octet[i]);
- *     cur_str += num_chars_written;
- *     
- *     if (i < 3) {
- *       cur_str[0] = '.';
- *       cur_str++;
- *     }
- *   }
- *   
- *   return ret_str;
- * 
- * I make no assertions about speed or efficiency here. There is no error
- * handling (in case of malloc failing), also.
- * 
- * However, this works on 64bit platforms, where the previous implementation
- * did not.
- */
-char *_patched_GeoIP_num_to_addr(GeoIP* gi, unsigned long ipnum) {
-  char *ip;
-  int i, octet[4];
-  
-  ip = malloc(sizeof(char) * 16);
-  memset(ip, '\0', sizeof(char) * 16);
-  
-  for(i = 0; i < 4; i++)
-  {
-    octet[i] = (ipnum >> (i*8)) & 0xFF;
-  }
-  
-  sprintf(ip, "%i.%i.%i.%i", octet[3], octet[2], octet[1], octet[0]);
-  
-  return ip;
-}
+// Fixes a bug with 64bit architectures where this delcaration doesn't exist
+// in the GeoIP library causing segmentation faults.
+char *_GeoIP_num_to_addr(GeoIP* gi, unsigned long ipnum);
 
 VALUE rb_geoip_num_to_addr(VALUE self, VALUE num) {
   VALUE num_type = TYPE(num);
@@ -331,8 +278,7 @@ VALUE rb_geoip_num_to_addr(VALUE self, VALUE num) {
     case T_BIGNUM: break;
     default: rb_raise(rb_eTypeError, "wrong argument type %s (expected Fixnum or Bignum)", rb_obj_classname(num));
   }
-  // return rb_str_new2((char*)_GeoIP_num_to_addr(NULL, (unsigned long)NUM2ULONG(num)));
-  return rb_str_new2((char*)_patched_GeoIP_num_to_addr(NULL, (unsigned long)NUM2ULONG(num)));
+  return rb_str_new2((char*)_GeoIP_num_to_addr(NULL, (unsigned long)NUM2ULONG(num)));
 }
 
 void Init_geoip()
