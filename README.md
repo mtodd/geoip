@@ -140,6 +140,7 @@ Many thanks to our contributors:
 
 * Charles Brian Quinn
 * Michael Sheakoski
+* Silvio Quadri
 
 License
 -------

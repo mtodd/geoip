@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name              = 'geoip-c'
   s.version           = "0.6.3"
   
-  s.authors           = ['Ryan Dahl', 'Matt Todd', 'Charles Brian Quinn', 'Michael Sheakoski']
+  s.authors           = ['Ryan Dahl', 'Matt Todd', 'Charles Brian Quinn', 'Michael Sheakoski', 'Silvio Quadri']
   s.email             = 'mtodd@highgroove.com'
   
   s.summary           = "A Binding to the GeoIP C library"
