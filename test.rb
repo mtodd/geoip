@@ -51,7 +51,7 @@ class GeoIPTest < Test::Unit::TestCase
   end
   
   def test_num_to_addr_converts_large_ipnums_to_an_ip_correctly
-    # assert_equal @large_ip, GeoIP.num_to_addr(@large_ipnum)
+    assert_equal @large_ip, GeoIP.num_to_addr(@large_ipnum)
   end
   
   def test_num_to_addr_expects_a_numeric_ip
