@@ -59,7 +59,7 @@ static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE 
   if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
     database = Data_Wrap_Struct(mGeoIP_Database_Class, 0, GeoIP_delete, gi);
     rb_obj_call_init(database, 0, 0);
-  } else { 
+  } else {
     rb_sys_fail("Problem opening database");
   }
   return database;
@@ -67,7 +67,7 @@ static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE 
 
 /* GeoIP::City ***************************************************************/
 
-VALUE rb_city_record_to_hash(GeoIPRecord *record) 
+VALUE rb_city_record_to_hash(GeoIPRecord *record)
 {
   VALUE hash = rb_hash_new();
 
@@ -91,20 +91,20 @@ VALUE rb_city_record_to_hash(GeoIPRecord *record)
     rb_hash_sset(hash, "dma_code", INT2NUM(record->dma_code));
   if(record->area_code)
     rb_hash_sset(hash, "area_code", INT2NUM(record->area_code));
-  
+
   return hash;
 }
 
-/* The first argument is the filename of the GeoIPCity.dat file 
+/* The first argument is the filename of the GeoIPCity.dat file
  * load_option = :standard, :index, or :memory. default :memory
  * check_cache = true or false. default false
- * 
+ *
  * filesystem: read database from filesystem, uses least memory.
- * 
+ *
  * index: the most frequently accessed index portion of the database,
  *   resulting in faster lookups than :filesystem, but less memory usage than
  *   :memory.
- * 
+ *
  * memory: load database into memory, faster performance but uses more
  *   memory.
  */
@@ -115,18 +115,18 @@ static VALUE rb_geoip_city_new(int argc, VALUE *argv, VALUE self)
 
 /* Pass this function an IP address as a string, it will return a hash
  * containing all the information that the database knows about the IP
- *    db.look_up('24.24.24.24') 
- *    => {:city=>"Ithaca", :latitude=>42.4277992248535, 
- *        :country_code=>"US", :longitude=>-76.4981994628906, 
- *        :country_code3=>"USA", :dma_code=>555, 
- *        :country_name=>"United States", :area_code=>607, 
- *        :region=>"NY"} 
- */ 
+ *    db.look_up('24.24.24.24')
+ *    => {:city=>"Ithaca", :latitude=>42.4277992248535,
+ *        :country_code=>"US", :longitude=>-76.4981994628906,
+ *        :country_code3=>"USA", :dma_code=>555,
+ *        :country_name=>"United States", :area_code=>607,
+ *        :region=>"NY"}
+ */
 VALUE rb_geoip_city_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   GeoIPRecord *record = NULL;
-  VALUE hash = Qnil; 
-  
+  VALUE hash = Qnil;
+
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
   if(record = GeoIP_record_by_addr(gi, STR2CSTR(addr))) {
@@ -143,7 +143,7 @@ VALUE rb_geoip_city_look_up(VALUE self, VALUE addr) {
  * * :memory - load the data into memory, fastest (default)
  * * :filesystem - look up from filesystem, least memory intensive
  * * :index - stores in memory most recent queries
- * 
+ *
  */
 static VALUE rb_geoip_org_new(int argc, VALUE *argv, VALUE self)
 {
@@ -159,7 +159,7 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   VALUE hash = rb_hash_new();
   char * name = NULL;
-  
+
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
   if(name = GeoIP_name_by_addr(gi, STR2CSTR(addr))) {
@@ -279,10 +279,10 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
 /* GeoIP *********************************************************************/
 
 /* Returns the numeric form of an IP address.
- * 
+ *
  * For example:
  * 24.24.24.24 => 404232216
- * 
+ *
  * This is used in order to be able to perform searches in CSV versions of the
  * data files or in SQL records if the data has been put there.
  */
@@ -363,29 +363,29 @@ void Init_geoip()
 {
   mGeoIP = rb_define_module("GeoIP");
 
-  rb_geoip_memory = ID2SYM(rb_intern("memory")); 
-  rb_geoip_filesystem = ID2SYM(rb_intern("filesystem")); 
-  rb_geoip_index = ID2SYM(rb_intern("index")); 
+  rb_geoip_memory = ID2SYM(rb_intern("memory"));
+  rb_geoip_filesystem = ID2SYM(rb_intern("filesystem"));
+  rb_geoip_index = ID2SYM(rb_intern("index"));
 
   mGeoIP_City = rb_define_class_under(mGeoIP, "City", rb_cObject);
   rb_define_singleton_method(mGeoIP_City, "new",      rb_geoip_city_new,      -1);
-  rb_define_method(mGeoIP_City,           "look_up",  rb_geoip_city_look_up,  1);
-  
+  rb_define_method(          mGeoIP_City, "look_up",  rb_geoip_city_look_up,  1);
+
   mGeoIP_Organization = rb_define_class_under(mGeoIP, "Organization", rb_cObject);
-  rb_define_singleton_method( mGeoIP_Organization, "new",     rb_geoip_org_new,     -1);
-  rb_define_method(           mGeoIP_Organization, "look_up", rb_geoip_org_look_up, 1);
-  
+  rb_define_singleton_method(mGeoIP_Organization, "new",     rb_geoip_org_new,     -1);
+  rb_define_method(          mGeoIP_Organization, "look_up", rb_geoip_org_look_up, 1);
+
   mGeoIP_ISP = rb_define_class_under(mGeoIP, "ISP", rb_cObject);
-  rb_define_singleton_method( mGeoIP_ISP, "new",     rb_geoip_isp_new,     -1);
-  rb_define_method(           mGeoIP_ISP, "look_up", rb_geoip_isp_look_up, 1);
+  rb_define_singleton_method(mGeoIP_ISP, "new",     rb_geoip_isp_new,     -1);
+  rb_define_method(          mGeoIP_ISP, "look_up", rb_geoip_isp_look_up, 1);
 
   mGeoIP_NetSpeed = rb_define_class_under(mGeoIP, "NetSpeed", rb_cObject);
-  rb_define_singleton_method( mGeoIP_NetSpeed, "new",     rb_geoip_netspeed_new,     -1);
-  rb_define_method(           mGeoIP_NetSpeed, "look_up", rb_geoip_netspeed_look_up, 1);
+  rb_define_singleton_method(mGeoIP_NetSpeed, "new",     rb_geoip_netspeed_new,     -1);
+  rb_define_method(          mGeoIP_NetSpeed, "look_up", rb_geoip_netspeed_look_up, 1);
 
   mGeoIP_Domain = rb_define_class_under(mGeoIP, "Domain", rb_cObject);
-  rb_define_singleton_method( mGeoIP_Domain, "new",     rb_geoip_domain_new,     -1);
-  rb_define_method(           mGeoIP_Domain, "look_up", rb_geoip_domain_look_up, 1);
+  rb_define_singleton_method(mGeoIP_Domain, "new",     rb_geoip_domain_new,     -1);
+  rb_define_method(          mGeoIP_Domain, "look_up", rb_geoip_domain_look_up, 1);
 
   rb_define_singleton_method(mGeoIP, "addr_to_num", rb_geoip_addr_to_num, 1);
   rb_define_singleton_method(mGeoIP, "num_to_addr", rb_geoip_num_to_addr, 1);
