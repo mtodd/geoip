@@ -115,6 +115,11 @@ class GeoIPCityTest < Test::Unit::TestCase
     end
   end
 
+  def test_character_encoding_converted_to_utf8_first
+    db = GeoIP::City.new(@dbfile, :filesystem, true)
+    assert_look_up(db, '201.85.50.148', :city, 'São Paulo')
+  end
+
 end
 
 class GeoIPOrgTest < Test::Unit::TestCase
