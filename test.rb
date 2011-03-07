@@ -85,33 +85,33 @@ class GeoIPCityTest < Test::Unit::TestCase
     h = db.look_up('24.24.24.24')
     #debugger
     assert_kind_of Hash, h
-    assert_equal 'Jamaica', h[:city]
+    assert_equal 'New York', h[:city]
     assert_equal 'United States', h[:country_name]
   end
 
   def test_construction_index
     db = GeoIP::City.new(@dbfile, :index)
-    assert_look_up(db, '24.24.24.24', :city, 'Jamaica')
+    assert_look_up(db, '24.24.24.24', :city, 'New York')
   end
 
   def test_construction_filesystem
     db = GeoIP::City.new(@dbfile, :filesystem)
-    assert_look_up(db, '24.24.24.24', :city, 'Jamaica')
+    assert_look_up(db, '24.24.24.24', :city, 'New York')
   end
 
   def test_construction_memory
     db = GeoIP::City.new(@dbfile, :memory)
-    assert_look_up(db, '24.24.24.24', :city, 'Jamaica')
+    assert_look_up(db, '24.24.24.24', :city, 'New York')
   end
 
   def test_construction_filesystem_check
     db = GeoIP::City.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '24.24.24.24', :city, 'Jamaica')
+    assert_look_up(db, '24.24.24.24', :city, 'New York')
   end
 
   def test_bad_db_file
     assert_raises Errno::ENOENT do
-      GeoIP::City.new('/blah')
+      GeoIP::City.new('/supposed-to-fail')
     end
   end
 
@@ -158,7 +158,7 @@ class GeoIPOrgTest < Test::Unit::TestCase
 
   def test_bad_db_file
     assert_raises Errno::ENOENT do
-      GeoIP::Organization.new('/blah')
+      GeoIP::Organization.new('/supposed-to-fail')
     end
   end
 
