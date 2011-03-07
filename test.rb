@@ -4,6 +4,9 @@ require 'rubygems'
 # require 'ruby-debug'
 # Debugger.start
 
+CITY_DB = ENV.fetch("CITY", '/usr/local/GeoIP/share/GeoIP/GeoLiteCity.dat')
+ORG_DB  = ENV.fetch("ORG",  '/usr/local/GeoIP/share/GeoIP/GeoIPOrg.dat')
+
 class Test::Unit::TestCase
 
   def assert_look_up(db, addr, field, value)
@@ -69,7 +72,7 @@ class GeoIPCityTest < Test::Unit::TestCase
   
   def setup
     ## Change me!
-    @dbfile = '/usr/local/GeoIP/share/GeoIP/GeoLiteCity.dat'
+    @dbfile = CITY_DB
   end
 
   def test_construction_default
@@ -118,7 +121,7 @@ class GeoIPOrgTest < Test::Unit::TestCase
   
   def setup
     ## Change me!
-    @dbfile = '/usr/local/GeoIP/share/GeoIP/GeoIPOrg.dat'
+    @dbfile = ORG_DB
   end
 
   def test_construction_default
