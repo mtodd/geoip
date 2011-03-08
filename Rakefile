@@ -22,7 +22,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name              = 'geoip-c'
-  s.version           = "0.7.0"
+  s.version           = "0.7.1"
 
   s.authors           = ['Ryah Dahl', 'Matt Todd', 'Charles Brian Quinn', 'Michael Sheakoski', 'Silvio Quadri']
   s.email             = 'mtodd@highgroove.com'
