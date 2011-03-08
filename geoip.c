@@ -8,6 +8,7 @@
 #include <ruby.h>
 #include <GeoIP.h>
 #include <GeoIPCity.h>
+#include "iconv.h"
 
 static VALUE mGeoIP;
 static VALUE mGeoIP_City;
@@ -23,6 +24,25 @@ static VALUE rb_geoip_index;
 /* helpers */
 void rb_hash_sset(VALUE hash, const char *str, VALUE v) {
   rb_hash_aset(hash, ID2SYM(rb_intern(str)), v);
+}
+
+/*  pulled from http://blog.inventic.eu/?p=238 and
+    https://github.com/Vagabond/erlang-iconv/blob/master/c_src/iconv_drv.c */
+static VALUE encode_to_utf8_and_return_rb_str(char *value) {
+  char dst[BUFSIZ];
+  size_t srclen = strlen(value);
+  size_t dstlen = srclen * 2;
+
+  char * pIn = value;
+  char * pOut = ( char*)dst;
+
+  iconv_t cd = iconv_open("UTF-8","ISO-8859-1");
+  iconv(cd, &pIn, &srclen, &pOut, &dstlen);
+  iconv_close(cd);
+
+  *(pOut++) = 0; /* ensure we null terminate */
+
+  return rb_str_new2(dst);
 }
 
 int check_load_option(VALUE load_option) {
@@ -71,7 +91,7 @@ static VALUE generic_single_value_lookup_response(char *key, char *value)
 {
   VALUE result = rb_hash_new();
   if(value) {
-    rb_hash_sset(result, key, rb_str_new2(value));
+    rb_hash_sset(result, key, encode_to_utf8_and_return_rb_str(value));
     return result;
   } else {
     return Qnil;
@@ -85,17 +105,17 @@ VALUE rb_city_record_to_hash(GeoIPRecord *record)
   VALUE hash = rb_hash_new();
 
   if(record->country_code)
-    rb_hash_sset(hash, "country_code", rb_str_new2(record->country_code));
+    rb_hash_sset(hash, "country_code", encode_to_utf8_and_return_rb_str(record->country_code));
   if(record->country_code3)
-    rb_hash_sset(hash, "country_code3", rb_str_new2(record->country_code3));
+    rb_hash_sset(hash, "country_code3", encode_to_utf8_and_return_rb_str(record->country_code3));
   if(record->country_name)
-    rb_hash_sset(hash, "country_name", rb_str_new2(record->country_name));
+    rb_hash_sset(hash, "country_name", encode_to_utf8_and_return_rb_str(record->country_name));
   if(record->region)
-    rb_hash_sset(hash, "region", rb_str_new2(record->region));
+    rb_hash_sset(hash, "region", encode_to_utf8_and_return_rb_str(record->region));
   if(record->city)
-    rb_hash_sset(hash, "city", rb_str_new2(record->city));
+    rb_hash_sset(hash, "city", encode_to_utf8_and_return_rb_str(record->city));
   if(record->postal_code)
-    rb_hash_sset(hash, "postal_code", rb_str_new2(record->postal_code));
+    rb_hash_sset(hash, "postal_code", encode_to_utf8_and_return_rb_str(record->postal_code));
   if(record->latitude)
     rb_hash_sset(hash, "latitude", rb_float_new((double)record->latitude));
   if(record->longitude)
