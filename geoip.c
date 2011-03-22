@@ -77,7 +77,7 @@ static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE 
 
   if(RTEST(check_cache)) flag |= GEOIP_CHECK_CACHE;
 
-  if(gi = GeoIP_open(STR2CSTR(filename), flag)) {
+  if(gi = GeoIP_open(StringValuePtr(filename), flag)) {
     database = Data_Wrap_Struct(mGeoIP_Database_Class, 0, GeoIP_delete, gi);
     rb_obj_call_init(database, 0, 0);
   } else {
@@ -162,7 +162,7 @@ VALUE rb_geoip_city_look_up(VALUE self, VALUE addr) {
 
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  if(record = GeoIP_record_by_addr(gi, STR2CSTR(addr))) {
+  if(record = GeoIP_record_by_addr(gi, StringValuePtr(addr))) {
     hash =  rb_city_record_to_hash(record);
     GeoIPRecord_delete(record);
   }
@@ -193,7 +193,7 @@ VALUE rb_geoip_country_look_up(VALUE self, VALUE addr) {
   
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  country_id = GeoIP_id_by_addr(gi, STR2CSTR(addr));
+  country_id = GeoIP_id_by_addr(gi, StringValuePtr(addr));
   if(country_id < 1) return Qnil;
   
   hash = rb_hash_new();
@@ -227,7 +227,7 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("name", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
+  return generic_single_value_lookup_response("name", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
 }
 
 /* GeoIP::ISP *******************************************************/
@@ -253,7 +253,7 @@ VALUE rb_geoip_isp_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("isp", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
+  return generic_single_value_lookup_response("isp", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
 }
 
 /* GeoIP::NetSpeed *******************************************************/
@@ -279,7 +279,7 @@ VALUE rb_geoip_netspeed_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("netspeed", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
+  return generic_single_value_lookup_response("netspeed", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
 }
 
 /* GeoIP::Domain *******************************************************/
@@ -305,7 +305,7 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("domain", GeoIP_name_by_addr(gi, STR2CSTR(addr)));
+  return generic_single_value_lookup_response("domain", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
 }
 
 /* GeoIP *********************************************************************/
@@ -320,7 +320,7 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
  */
 VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
   Check_Type(addr, T_STRING);
-  return UINT2NUM((unsigned int)_GeoIP_addr_to_num(STR2CSTR(addr)));
+  return UINT2NUM((unsigned int)_GeoIP_addr_to_num(StringValuePtr(addr)));
 }
 
 // Fixes a bug with 64bit architectures where this delcaration doesn't exist
