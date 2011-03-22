@@ -138,9 +138,10 @@ Special appreciation and thanks belongs to Ry Dahl for his initial work on this 
 
 Many thanks to our contributors:
 
-* Charles Brian Quinn
+* Charles Brian Quinn ([seebq](https://github.com/seebq))
 * Michael Sheakoski
 * Silvio Quadri
+* Leonardo Almeida ([leogalmeida](https://github.com/leogalmeida))
 
 License
 -------
