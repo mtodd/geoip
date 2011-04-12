@@ -75,17 +75,23 @@ Some variation of the following should work.
         ./configure --prefix=/opt/GeoIP
         make && sudo make install
 
-    On Mac OS X, you can install using MacPorts:
+    On Mac OS X, you can install using [homebrew](http://github.com/mxcl/homebrew):
 
-        sudo port install libgeoip
+        brew install geoip
 
-  2. Now install the `geoip` gem 
+    Linux platforms utilizing Apt have several packages available:
 
-        gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
+        geoip-bin
+        geoip-database
+        libgeoip-dev
 
-    Alternatively, if you installed libgeoip using MacPorts:
+  2. Now install the `geoip` gem
 
-        env ARCHFLAGS="-arch x86_64" gem install geoip-c -- --with-opt-dir=/opt/local
+        gem install geoip-c -- --with-geoip-dir=/opt/GeoIP
+
+    Alternatively, if you installed libgeoip using homebrew:
+
+        gem install geoip-c
 
   3. Download the GeoLite City database file in binary format at http://www.maxmind.com/app/geolitecity
      Maybe this [direct link](http://www.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz) will work.
@@ -93,7 +99,7 @@ Some variation of the following should work.
 
         /opt/GeoIP/share/GeoIP/GeoLiteCity.dat
 
-    If you installed libgeoip using MacPorts then put it in:
+    If you installed libgeoip using homebrew then put it in:
 
         /opt/local/share/GeoIP/GeoLiteCity.dat
 
@@ -118,7 +124,7 @@ Hints
 
     Example:
 
-        env ARCHFLAGS="-arch i386" gem install mtodd-geoip -s http://gems.github.com/ -- --with-geoip-dir=/opt/GeoIP
+        env ARCHFLAGS="-arch i386" gem install geoip-c -- --with-geoip-dir=/opt/GeoIP
 
   2. You might find [this shell script](http://github.com/grimen/my_shell_scripts/blob/8cf04cb6829e68a47f2d6f9d9e057766ea72beb4/install_geoip-city.sh)
      helpful to install the C library.
