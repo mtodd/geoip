@@ -21,6 +21,20 @@ static VALUE rb_geoip_memory;
 static VALUE rb_geoip_filesystem;
 static VALUE rb_geoip_index;
 
+#ifndef HAVE_GEOIP_ADDR_TO_NUM
+  // Support geoip <= 1.4.6
+  #define GeoIP_addr_to_num _GeoIP_addr_to_num
+#endif
+
+#ifndef HAVE_GEOIP_NUM_TO_ADDR
+  // Support geoip <= 1.4.6
+
+  // Fixes a bug with 64bit architectures where this delcaration doesn't exist
+  // in the GeoIP library causing segmentation faults.
+  char *_GeoIP_num_to_addr(GeoIP* gi, unsigned long ipnum);
+  #define GeoIP_num_to_addr(ipnum) _GeoIP_num_to_addr(NULL, ipnum)
+#endif
+
 /* helpers */
 void rb_hash_sset(VALUE hash, const char *str, VALUE v) {
   rb_hash_aset(hash, ID2SYM(rb_intern(str)), v);
@@ -320,12 +334,9 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
  */
 VALUE rb_geoip_addr_to_num(VALUE self, VALUE addr) {
   Check_Type(addr, T_STRING);
-  return UINT2NUM((unsigned int)_GeoIP_addr_to_num(StringValuePtr(addr)));
+  return UINT2NUM((unsigned int)GeoIP_addr_to_num(StringValuePtr(addr)));
 }
 
-// Fixes a bug with 64bit architectures where this delcaration doesn't exist
-// in the GeoIP library causing segmentation faults.
-char *_GeoIP_num_to_addr(GeoIP* gi, unsigned long ipnum);
 
 VALUE rb_geoip_num_to_addr(VALUE self, VALUE num) {
   VALUE num_type = TYPE(num);
@@ -334,7 +345,7 @@ VALUE rb_geoip_num_to_addr(VALUE self, VALUE num) {
     case T_BIGNUM: break;
     default: rb_raise(rb_eTypeError, "wrong argument type %s (expected Fixnum or Bignum)", rb_obj_classname(num));
   }
-  return rb_str_new2((char*)_GeoIP_num_to_addr(NULL, (unsigned long)NUM2ULONG(num)));
+  return rb_str_new2((char*)GeoIP_num_to_addr((unsigned long)NUM2ULONG(num)));
 }
 
 void Init_geoip()
