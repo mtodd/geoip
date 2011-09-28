@@ -24,8 +24,8 @@ spec = Gem::Specification.new do |s|
   s.name              = 'geoip-c'
   s.version           = "0.8.0.rc1"
 
-  s.authors           = ['Ryah Dahl', 'Matt Todd']
-  s.email             = 'mtodd@highgroove.com'
+  s.authors           = ['Ryah Dahl', 'Matt Todd', 'Andy Lindeman']
+  s.email             = ['alindeman@gmail.com', 'mtodd@highgroove.com']
 
   s.summary           = "A Binding to the GeoIP C library"
   s.description       = 'Generic GeoIP lookup tool. Based on the geoip_city RubyGem by Ryah Dahl'
