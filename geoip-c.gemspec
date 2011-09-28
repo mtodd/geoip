@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage          = "http://github.com/mtodd/geoip"
   
   s.files             = ["Rakefile", "extconf.rb", "test.rb", "geoip.c", "README.md"]
-  s.test_files        = 'test.rb'
-  s.extensions        = 'extconf.rb'
+  s.test_files        = ['test.rb']
+  s.extensions        = ['extconf.rb']
   s.require_path      = '.'
 end
