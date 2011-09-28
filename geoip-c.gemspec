@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'geoip-c'
-  s.version           = "0.7.1"
+  s.version           = "0.8.0.rc1"
   
   s.authors           = ['Ryan Dahl', 'Matt Todd', 'Charles Brian Quinn', 'Michael Sheakoski', 'Silvio Quadri']
   s.email             = 'mtodd@highgroove.com'
