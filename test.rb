@@ -66,102 +66,112 @@ class GeoIPTest < Test::Unit::TestCase
 
 end
 
-class GeoIPCityTest < Test::Unit::TestCase
+unless File.exist?(CITY_DB)
+  puts "No City DB found, skipping GeoIP::City tests"
+  puts "* Set CITY=/path/to/GeoIPCity.dat to run tests"
+else
+  class GeoIPCityTest < Test::Unit::TestCase
 
-  def setup
-    ## Change me!
-    @dbfile = CITY_DB
-  end
-
-  def test_construction_default
-    db = GeoIP::City.new(@dbfile)
-
-    assert_raises TypeError do
-      db.look_up(nil)
+    def setup
+      ## Change me!
+      @dbfile = CITY_DB
     end
 
-    h = db.look_up('24.24.24.24')
-    assert_kind_of Hash, h
-    assert_equal 'New York', h[:city]
-    assert_equal 'United States', h[:country_name]
-  end
+    def test_construction_default
+      db = GeoIP::City.new(@dbfile)
 
-  def test_construction_index
-    db = GeoIP::City.new(@dbfile, :index)
-    assert_look_up(db, '24.24.24.24', :city, 'New York')
-  end
+      assert_raises TypeError do
+        db.look_up(nil)
+      end
 
-  def test_construction_filesystem
-    db = GeoIP::City.new(@dbfile, :filesystem)
-    assert_look_up(db, '24.24.24.24', :city, 'New York')
-  end
-
-  def test_construction_memory
-    db = GeoIP::City.new(@dbfile, :memory)
-    assert_look_up(db, '24.24.24.24', :city, 'New York')
-  end
-
-  def test_construction_filesystem_check
-    db = GeoIP::City.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '24.24.24.24', :city, 'New York')
-  end
-
-  def test_bad_db_file
-    assert_raises Errno::ENOENT do
-      GeoIP::City.new('/supposed-to-fail')
+      h = db.look_up('24.24.24.24')
+      assert_kind_of Hash, h
+      assert_equal 'New York', h[:city]
+      assert_equal 'United States', h[:country_name]
     end
-  end
 
-  def test_character_encoding_converted_to_utf8_first
-    db = GeoIP::City.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '201.85.50.148', :city, 'São Paulo')
-  end
+    def test_construction_index
+      db = GeoIP::City.new(@dbfile, :index)
+      assert_look_up(db, '24.24.24.24', :city, 'New York')
+    end
 
+    def test_construction_filesystem
+      db = GeoIP::City.new(@dbfile, :filesystem)
+      assert_look_up(db, '24.24.24.24', :city, 'New York')
+    end
+
+    def test_construction_memory
+      db = GeoIP::City.new(@dbfile, :memory)
+      assert_look_up(db, '24.24.24.24', :city, 'New York')
+    end
+
+    def test_construction_filesystem_check
+      db = GeoIP::City.new(@dbfile, :filesystem, true)
+      assert_look_up(db, '24.24.24.24', :city, 'New York')
+    end
+
+    def test_bad_db_file
+      assert_raises Errno::ENOENT do
+        GeoIP::City.new('/supposed-to-fail')
+      end
+    end
+
+    def test_character_encoding_converted_to_utf8_first
+      db = GeoIP::City.new(@dbfile, :filesystem, true)
+      assert_look_up(db, '201.85.50.148', :city, 'São Paulo')
+    end
+
+  end
 end
 
-class GeoIPOrgTest < Test::Unit::TestCase
+unless File.exist?(ORG_DB)
+  puts "No Org DB found, skipping GeoIP::Organization tests"
+  puts "* Set ORG=/path/to/GeoIPORG.dat to run tests"
+else
+  class GeoIPOrgTest < Test::Unit::TestCase
 
-  def setup
-    ## Change me!
-    @dbfile = ORG_DB
-  end
-
-  def test_construction_default
-    db = GeoIP::Organization.new(@dbfile)
-
-    assert_raises TypeError do
-      db.look_up(nil)
+    def setup
+      ## Change me!
+      @dbfile = ORG_DB
     end
 
-    h = db.look_up('24.24.24.24')
-    assert_kind_of Hash, h
-    assert_equal 'Road Runner', h[:name]
-  end
+    def test_construction_default
+      db = GeoIP::Organization.new(@dbfile)
 
-  def test_construction_index
-    db = GeoIP::Organization.new(@dbfile, :index)
-    assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
-  end
+      assert_raises TypeError do
+        db.look_up(nil)
+      end
 
-  def test_construction_filesystem
-    db = GeoIP::Organization.new(@dbfile, :filesystem)
-    assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
-  end
-
-  def test_construction_memory
-    db = GeoIP::Organization.new(@dbfile, :memory)
-    assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
-  end
-
-  def test_construction_filesystem_check
-    db = GeoIP::Organization.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
-  end
-
-  def test_bad_db_file
-    assert_raises Errno::ENOENT do
-      GeoIP::Organization.new('/supposed-to-fail')
+      h = db.look_up('24.24.24.24')
+      assert_kind_of Hash, h
+      assert_equal 'Road Runner', h[:name]
     end
-  end
 
+    def test_construction_index
+      db = GeoIP::Organization.new(@dbfile, :index)
+      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+    end
+
+    def test_construction_filesystem
+      db = GeoIP::Organization.new(@dbfile, :filesystem)
+      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+    end
+
+    def test_construction_memory
+      db = GeoIP::Organization.new(@dbfile, :memory)
+      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+    end
+
+    def test_construction_filesystem_check
+      db = GeoIP::Organization.new(@dbfile, :filesystem, true)
+      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+    end
+
+    def test_bad_db_file
+      assert_raises Errno::ENOENT do
+        GeoIP::Organization.new('/supposed-to-fail')
+      end
+    end
+
+  end
 end
