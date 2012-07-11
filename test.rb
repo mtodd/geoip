@@ -123,6 +123,15 @@ else
       assert_look_up(db, '201.85.50.148', :city, 'São Paulo')
     end
 
+    def test_blank_region_skips_region_name_set
+      db = GeoIP::City.new(@dbfile, :filesystem, true)
+      ip = '116.48.136.76'
+      assert_look_up(db, ip, :region, nil)
+      assert_look_up(db, ip, :region_name, nil)
+      assert_look_up(db, ip, :city, 'Central District')
+      assert_look_up(db, ip, :country_name, 'Hong Kong')
+    end
+
   end
 end
 
