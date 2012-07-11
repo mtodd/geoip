@@ -2,8 +2,8 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/geoip'
 require 'rubygems'
 
-CITY_DB = ENV.fetch("CITY", '/usr/local/GeoIP/share/GeoIP/GeoLiteCity.dat')
-ORG_DB  = ENV.fetch("ORG",  '/usr/local/GeoIP/share/GeoIP/GeoIPOrg.dat')
+CITY_DB = ENV.fetch("CITY", File.expand_path('test/fixtures/city.dat'))
+ORG_DB  = ENV.fetch("ORG",  File.expand_path('test/fixtures/org.dat'))
 
 class Test::Unit::TestCase
 
@@ -144,27 +144,27 @@ else
 
       h = db.look_up('24.24.24.24')
       assert_kind_of Hash, h
-      assert_equal 'Road Runner', h[:name]
+      assert_equal 'org test 123 org', h[:name]
     end
 
     def test_construction_index
       db = GeoIP::Organization.new(@dbfile, :index)
-      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+      assert_look_up(db, '24.24.24.24', :name, 'org test 123 org')
     end
 
     def test_construction_filesystem
       db = GeoIP::Organization.new(@dbfile, :filesystem)
-      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+      assert_look_up(db, '24.24.24.24', :name, 'org test 123 org')
     end
 
     def test_construction_memory
       db = GeoIP::Organization.new(@dbfile, :memory)
-      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+      assert_look_up(db, '24.24.24.24', :name, 'org test 123 org')
     end
 
     def test_construction_filesystem_check
       db = GeoIP::Organization.new(@dbfile, :filesystem, true)
-      assert_look_up(db, '24.24.24.24', :name, 'Road Runner')
+      assert_look_up(db, '24.24.24.24', :name, 'org test 123 org')
     end
 
     def test_bad_db_file
