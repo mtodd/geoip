@@ -1,8 +1,6 @@
 require 'test/unit'
 require File.dirname(__FILE__) + '/geoip'
 require 'rubygems'
-# require 'ruby-debug'
-# Debugger.start
 
 CITY_DB = ENV.fetch("CITY", '/usr/local/GeoIP/share/GeoIP/GeoLiteCity.dat')
 ORG_DB  = ENV.fetch("ORG",  '/usr/local/GeoIP/share/GeoIP/GeoIPOrg.dat')
@@ -83,7 +81,6 @@ class GeoIPCityTest < Test::Unit::TestCase
     end
 
     h = db.look_up('24.24.24.24')
-    #debugger
     assert_kind_of Hash, h
     assert_equal 'New York', h[:city]
     assert_equal 'United States', h[:country_name]
