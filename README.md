@@ -101,7 +101,7 @@ Some variation of the following should work.
 
     If you installed libgeoip using homebrew then put it in:
 
-        /opt/local/share/GeoIP/GeoLiteCity.dat
+        /usr/local/share/GeoIP/GeoLiteCity.dat
 
      If you are a paying customer, you will download the files required below:
 
