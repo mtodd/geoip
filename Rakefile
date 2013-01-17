@@ -5,7 +5,7 @@ require 'rake/testtask'
 require 'rdoc/task'
 require "rake/extensiontask"
 
-task :default => [:compile, :test]
+task :default => [:test]
 
 CLOBBER.add 'doc', 'data'
 
