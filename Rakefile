@@ -16,7 +16,6 @@ RDoc::Task.new do |rdoc|
 end
 
 Rake::TestTask.new do |t|
-  t.test_files = ['test.rb']
   t.verbose = true
 end
 

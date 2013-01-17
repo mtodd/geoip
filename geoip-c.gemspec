@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage     = "http://github.com/mtodd/geoip"
 
   s.files        = `git ls-files`.split("\n")
-  s.test_files   = ['test.rb']
+  s.test_files   = ['test/test_geoip.rb']
   s.extensions   = ["ext/geoip/extconf.rb"]
 
   s.add_development_dependency 'minitest', '~> 5.0'
