@@ -2,6 +2,9 @@ require 'mkmf'
 
 dir_config("geoip")
 
+$LDFLAGS << " #{ENV['LDFLAGS']}"
+$CFLAGS  << " #{ENV['CFLAGS']}"
+
 unless have_func('iconv_open', 'iconv.h') or have_library('iconv', 'iconv_open', 'iconv.h')
   abort "you must have iconv library installed!"
 end
