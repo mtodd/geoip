@@ -1,8 +1,8 @@
 require 'rake'
 require 'rake/clean'
 require 'rake/testtask'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
+require 'rdoc/task'
+require 'rubygems/package_task'
 
 task :default => [:compile, :test]
 
@@ -37,7 +37,7 @@ spec = Gem::Specification.new do |s|
   s.require_path      = '.'
 end
 
-Rake::GemPackageTask.new(spec) do |p|
+Gem::PackageTask.new(spec) do |p|
   p.need_tar = true
   p.gem_spec = spec
 end
