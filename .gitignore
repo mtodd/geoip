@@ -1,4 +1,5 @@
 pkg/
+doc/
 mkmf.log
 Makefile
 conftest.dSYM/
