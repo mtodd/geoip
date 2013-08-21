@@ -5,3 +5,4 @@ conftest.dSYM/
 geoip.bundle
 geoip.so
 geoip.o
+Gemfile.lock
