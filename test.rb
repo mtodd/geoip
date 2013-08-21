@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'minitest/autorun'
 require File.dirname(__FILE__) + '/geoip'
 
@@ -112,7 +113,7 @@ class GeoIPCityTest < Minitest::Test
 
   def test_character_encoding_converted_to_utf8_first
     db = GeoIP::City.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '201.85.50.148', :city, 'São Paulo')
+    assert_look_up(db, '201.85.50.148', :city, "Jundiaí")
   end
 
 end

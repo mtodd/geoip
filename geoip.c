@@ -10,6 +10,26 @@
 #include <GeoIPCity.h>
 #include "iconv.h"
 
+// String encoding support for 1.9 while maintaining 1.8 compatibility
+// <http://tenderlovemaking.com/2009/06/26/string-encoding-in-ruby-1-9-c-extensions.html>
+#ifdef HAVE_RUBY_ENCODING_H
+
+#include <ruby/encoding.h>
+#define ENCODED_STR_NEW2(str, encoding) \
+  ({ \
+    VALUE _string = rb_str_new2((const char *)str); \
+    int _enc = rb_enc_find_index(encoding); \
+    rb_enc_associate_index(_string, _enc); \
+    _string; \
+  })
+
+#else
+
+#define ENCODED_STR_NEW2(str, encoding) \
+  rb_str_new2((const char *)str)
+
+#endif
+
 static VALUE mGeoIP;
 static VALUE mGeoIP_City;
 static VALUE mGeoIP_Country;
@@ -56,7 +76,7 @@ static VALUE encode_to_utf8_and_return_rb_str(char *value) {
 
   *(pOut++) = 0; /* ensure we null terminate */
 
-  return rb_str_new2(dst);
+  return ENCODED_STR_NEW2(dst, "UTF-8");
 }
 
 int check_load_option(VALUE load_option) {
