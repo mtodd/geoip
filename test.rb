@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'rubygems'
 gem 'minitest'
 require 'minitest/autorun'
 require File.dirname(__FILE__) + '/geoip'
