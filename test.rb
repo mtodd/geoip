@@ -116,6 +116,12 @@ class GeoIPCityTest < Minitest::Test
     assert_look_up(db, '201.85.50.148', :city, "Jundiaí")
   end
 
+  def test_empty_region_name_does_not_crash
+    db = GeoIP::City.new(@dbfile, :filesystem, true)
+    assert_look_up(db, '119.236.232.169', :region, "00")
+    assert_look_up(db, '119.236.232.169', :region_name, nil)
+  end
+
 end
 
 class GeoIPOrgTest < Minitest::Test

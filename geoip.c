@@ -146,7 +146,11 @@ VALUE rb_city_record_to_hash(GeoIPRecord *record)
     rb_hash_sset(hash, "country_name", encode_to_utf8_and_return_rb_str(record->country_name));
   if(record->region) {
     rb_hash_sset(hash, "region", encode_to_utf8_and_return_rb_str(record->region));
-    rb_hash_sset(hash, "region_name", encode_to_utf8_and_return_rb_str(GeoIP_region_name_by_code(record->country_code, record->region)));
+
+    char *region_name = GeoIP_region_name_by_code(record->country_code, record->region);
+    if (region_name) {
+      rb_hash_sset(hash, "region_name", encode_to_utf8_and_return_rb_str(region_name));
+    }
   }
   if(record->city)
     rb_hash_sset(hash, "city", encode_to_utf8_and_return_rb_str(record->city));
