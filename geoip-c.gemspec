@@ -14,8 +14,7 @@ Gem::Specification.new do |s|
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = ['test.rb']
-  s.extensions   = ['extconf.rb']
-  s.require_path = '.'
+  s.extensions   = ["ext/geoip/extconf.rb"]
 
   s.add_development_dependency 'minitest', '~>5.0'
   s.add_development_dependency 'rake', '~>10.0'
