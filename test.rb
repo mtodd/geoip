@@ -1,8 +1,9 @@
 # encoding: utf-8
+
 require 'rubygems'
 gem 'minitest'
 require 'minitest/autorun'
-require File.dirname(__FILE__) + '/geoip'
+require 'geoip'
 
 CITY_DB = ENV.fetch("CITY", '/usr/local/GeoIP/share/GeoIP/GeoLiteCity.dat')
 ORG_DB  = ENV.fetch("ORG",  '/usr/local/GeoIP/share/GeoIP/GeoIPOrg.dat')
