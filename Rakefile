@@ -12,7 +12,7 @@ CLOBBER.add 'doc'
 RDoc::Task.new do |rdoc|
   rdoc.main = "README.md" # page to start on
   rdoc.rdoc_files.add ["README.md", "ext/geoip/geoip.c"]
-  rdoc.rdoc_dir = 'doc/' # rdoc output folder
+  rdoc.rdoc_dir = 'doc' # rdoc output folder
 end
 
 Rake::TestTask.new do |t|
