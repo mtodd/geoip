@@ -3,11 +3,11 @@ require 'bundler/gem_tasks'
 require 'rake/clean'
 require 'rake/testtask'
 require 'rdoc/task'
+require "rake/extensiontask"
 
 task :default => [:compile, :test]
 
-CLEAN.add "geoip.{o,bundle,so,obj,pdb,lib,def,exp}"
-CLOBBER.add ['Makefile', 'mkmf.log','doc']
+CLOBBER.add 'doc'
 
 RDoc::Task.new do |rdoc|
   rdoc.main = "README.md" # page to start on
@@ -20,6 +20,7 @@ Rake::TestTask.new do |t|
   t.verbose = true
 end
 
-desc 'compile the extension'
-task(:compile => 'Makefile') { sh 'make' }
-file('Makefile' => "geoip.c") { ruby 'extconf.rb' }
+spec = Gem::Specification.load "geoip-c.gemspec"
+
+Rake::ExtensionTask.new("geoip", spec) do |ext|
+end

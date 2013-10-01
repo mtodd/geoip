@@ -8,3 +8,4 @@ geoip.bundle
 geoip.so
 geoip.o
 Gemfile.lock
+/tmp
