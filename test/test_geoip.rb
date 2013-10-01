@@ -125,6 +125,10 @@ class GeoIPCityTest < Minitest::Test
     assert_look_up(db, '119.236.232.169', :region_name, nil)
   end
 
+  def test_hong_kong_segfault
+    db = GeoIP::City.new(@dbfile, :filesystem, true)
+    assert_look_up(db, "61.93.14.4", :country_name, "Hong Kong")
+  end
 end
 
 class GeoIPOrgTest < Minitest::Test
@@ -171,5 +175,4 @@ class GeoIPOrgTest < Minitest::Test
       GeoIP::Organization.new('/supposed-to-fail')
     end
   end
-
 end
