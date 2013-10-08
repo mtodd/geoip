@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 Gem::Specification.new do |s|
   s.name         = 'geoip-c'
   s.version      = "0.9.0"
@@ -11,11 +13,11 @@ Gem::Specification.new do |s|
   s.homepage     = "http://github.com/mtodd/geoip"
 
   s.files        = `git ls-files`.split("\n")
-  s.test_files   = ['test.rb']
-  s.extensions   = ['extconf.rb']
-  s.require_path = '.'
+  s.test_files   = ['test/test_geoip.rb']
+  s.extensions   = ["ext/geoip/extconf.rb"]
 
-  s.add_development_dependency 'minitest', '~>5.0'
-  s.add_development_dependency 'rake', '~>10.0'
-  s.add_development_dependency 'rdoc', '~>4.0'
+  s.add_development_dependency 'minitest', '~> 5.0'
+  s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'rdoc', '~> 4.0'
+  s.add_development_dependency "rake-compiler", "~> 0.9.1"
 end
