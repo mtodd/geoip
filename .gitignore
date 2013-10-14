@@ -9,3 +9,4 @@ geoip.so
 geoip.o
 Gemfile.lock
 /tmp
+/data
