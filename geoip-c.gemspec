@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name         = 'geoip-c'
-  s.version      = "0.9.0"
+  s.version      = "0.9.1"
   s.licenses     = ['WTFPL']
 
   s.authors      = ['Ryan Dahl', 'Matt Todd', 'Charles Brian Quinn', 'Michael Sheakoski', 'Silvio Quadri', 'Andy Lindeman']
