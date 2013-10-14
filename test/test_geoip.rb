@@ -116,7 +116,7 @@ class GeoIPCityTest < Minitest::Test
 
   def test_character_encoding_converted_to_utf8_first
     db = GeoIP::City.new(@dbfile, :filesystem, true)
-    assert_look_up(db, '201.85.50.148', :city, "Jundiaí")
+    assert_look_up(db, '201.85.50.148', :city, "São Paulo")
   end
 
   def test_empty_region_name_does_not_crash
