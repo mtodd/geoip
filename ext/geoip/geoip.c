@@ -121,7 +121,7 @@ static VALUE rb_geoip_database_new(VALUE mGeoIP_Database_Class, int argc, VALUE 
 }
 
 /* Generic, single-value look up method */
-static VALUE generic_single_value_lookup_response(char *key, char *value)
+static VALUE generic_single_value_lookup_response(const char *key, char *value)
 {
   VALUE result = rb_hash_new();
   if(value) {
@@ -267,7 +267,14 @@ VALUE rb_geoip_org_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("name", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
+
+  char *name = GeoIP_name_by_addr(gi, StringValuePtr(addr));
+  VALUE response = generic_single_value_lookup_response("name", name);
+
+  if (name) {
+    free(name);
+  }
+  return response;
 }
 
 /* GeoIP::ISP *******************************************************/
@@ -293,7 +300,14 @@ VALUE rb_geoip_isp_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("isp", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
+
+  char *name = GeoIP_name_by_addr(gi, StringValuePtr(addr));
+  VALUE response = generic_single_value_lookup_response("isp", name);
+
+  if (name) {
+    free(name);
+  }
+  return response;
 }
 
 /* GeoIP::NetSpeed *******************************************************/
@@ -319,7 +333,14 @@ VALUE rb_geoip_netspeed_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("netspeed", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
+
+  char *name = GeoIP_name_by_addr(gi, StringValuePtr(addr));
+  VALUE response = generic_single_value_lookup_response("netspeed", name);
+
+  if (name) {
+    free(name);
+  }
+  return response;
 }
 
 /* GeoIP::Domain *******************************************************/
@@ -345,7 +366,14 @@ VALUE rb_geoip_domain_look_up(VALUE self, VALUE addr) {
   GeoIP *gi;
   Check_Type(addr, T_STRING);
   Data_Get_Struct(self, GeoIP, gi);
-  return generic_single_value_lookup_response("domain", GeoIP_name_by_addr(gi, StringValuePtr(addr)));
+
+  char *name = GeoIP_name_by_addr(gi, StringValuePtr(addr));
+  VALUE response = generic_single_value_lookup_response("domain", name);
+
+  if (name) {
+    free(name);
+  }
+  return response;
 }
 
 /* GeoIP *********************************************************************/
